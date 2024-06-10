@@ -1,0 +1,129 @@
+scalar DateTime
+
+enum JobStatus {
+    OPEN
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+}
+
+enum BidStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+}
+
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    passwordHash: String!
+    firstName: String
+    lastName: String
+    profilePicture: String
+    bio: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Job {
+    id: ID!
+    user: User!
+    title: String!
+    description: String!
+    category: String
+    price: Float!
+    status: JobStatus!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Bid {
+    id: ID!
+    job: Job!
+    user: User!
+    offerPrice: Float!
+    message: String
+    status: BidStatus!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Review {
+    id: ID!
+    job: Job!
+    reviewer: User!
+    reviewee: User!
+    rating: Int!
+    comment: String
+    createdAt: DateTime!
+}
+
+type Query {
+    users: [User!]!
+    user(id: ID!): User
+    jobs: [Job!]!
+    job(jobId: ID!): Job
+    bids: [Bid!]!
+    bid(id: ID!): Bid
+    reviews: [Review!]!
+    review(id: ID!): Review
+}
+
+input CreateJobInput {
+    title: String!
+    description: String!
+    category: String
+    price: Float!
+    status: JobStatus!
+}
+
+input UpdateJobInput {
+    title: String
+    description: String
+    category: String
+    price: Float
+    status: JobStatus
+}
+
+input CreateBidInput {
+    jobId: ID!
+    offerPrice: Float!
+    message: String
+    status: BidStatus!
+}
+
+input UpdateBidInput {
+    jobId: ID
+    offerPrice: Float
+    message: String
+    status: BidStatus
+}
+
+input CreateReviewInput {
+    jobId: ID!
+    reviewerId: ID!
+    rating: Int!
+    comment: String
+}
+
+input UpdateReviewInput {
+    jobId: ID
+    reviewerId: ID
+    rating: Int
+    comment: String
+}
+
+type Mutation {
+    createJob(input: CreateJobInput!): Job!
+    updateJob(id: ID!, input: UpdateJobInput!): Job!
+    deleteJob(id: ID!): Boolean!
+
+    createBid(input: CreateBidInput!): Bid!
+    updateBid(id: ID!, input: UpdateBidInput!): Bid!
+    deleteBid(id: ID!): Boolean!
+
+    createReview(input: CreateReviewInput!): Review!
+    updateReview(id: ID!, input: UpdateReviewInput!): Review!
+    deleteReview(id: ID!): Boolean!
+}
